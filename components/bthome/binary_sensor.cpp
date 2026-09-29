@@ -10,13 +10,16 @@ namespace esphome {
 namespace bthome {
 
 static const char *const TAG = "bthome.button";
+static constexpr uint32_t NO_PACKET_COOLDOWN_MS = 1200;
 
 void BTHomeButtonBinarySensor::setup() { this->publish_initial_state(false); }
 
 void BTHomeButtonBinarySensor::dump_config() {
   LOG_BINARY_SENSOR("", "BTHome Button", this);
-  ESP_LOGCONFIG(TAG, "  Index: %u", this->index_);
-  ESP_LOGCONFIG(TAG, "  Event: 0x%02X", this->event_);
+  ESP_LOGCONFIG(TAG,
+                "  Index: %u\n"
+                "  Event: 0x%02X",
+                this->index_, this->event_);
 }
 
 bool BTHomeButtonBinarySensor::parse_device(const ble_device_base::ESPBTDevice &device) {
@@ -56,7 +59,7 @@ bool BTHomeButtonBinarySensor::parse_device(const ble_device_base::ESPBTDevice &
       }
       this->has_packet_id_ = true;
       this->last_packet_id_ = parsed.packet_id;
-    } else if (now - this->last_emit_ms_ < 1200) {
+    } else if (now - this->last_emit_ms_ < NO_PACKET_COOLDOWN_MS) {
       continue;
     }
     this->last_emit_ms_ = now;

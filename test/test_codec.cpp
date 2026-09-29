@@ -44,6 +44,18 @@ int main() {
   const uint8_t encrypted[] = {0x45, 0x11, 0x22};
   expect(!bthome::codec::parse(encrypted, sizeof(encrypted), &parsed) && parsed.encrypted, "encrypted rejected");
 
+  const uint8_t unknown_after[] = {0x44, 0x3A, 0x01, 0x99};
+  expect(bthome::codec::parse(unknown_after, sizeof(unknown_after), &parsed), "unknown stops");
+  expect(parsed.ok && parsed.button_count == 1 && parsed.buttons[0] == 0x01, "button kept");
+
+  const uint8_t empty_text[] = {0x44, 0x53, 0x00, 0x3A, 0x01};
+  expect(bthome::codec::parse(empty_text, sizeof(empty_text), &parsed), "empty text");
+  expect(parsed.ok && parsed.button_count == 1 && parsed.buttons[0] == 0x01, "button after empty text");
+
+  const uint8_t truncated_text[] = {0x44, 0x3A, 0x02, 0x53, 0x04, 0x41};
+  expect(bthome::codec::parse(truncated_text, sizeof(truncated_text), &parsed), "truncated text stops");
+  expect(parsed.ok && parsed.button_count == 1 && parsed.buttons[0] == 0x02, "button before truncated text");
+
   const uint8_t v1[] = {0x02, 0x3A, 0x01};
   expect(!bthome::codec::parse(v1, sizeof(v1), &parsed), "v1 rejected");
 

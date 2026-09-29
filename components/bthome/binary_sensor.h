@@ -22,12 +22,12 @@ class BTHomeButtonBinarySensor : public binary_sensor::BinarySensor,
 
  protected:
   uint64_t address_{0};
+  uint32_t pulse_length_ms_{200};
+  uint32_t last_emit_ms_{0};
   uint8_t index_{1};
   uint8_t event_{0x01};
-  uint32_t pulse_length_ms_{200};
-  bool has_packet_id_{false};
   uint8_t last_packet_id_{0};
-  uint32_t last_emit_ms_{0};
+  bool has_packet_id_{false};
   bool encrypted_logged_{false};
 };
 
