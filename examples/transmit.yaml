@@ -1,0 +1,47 @@
+# ESP32 sends one BTHome button gesture. A peer that already stored an
+# action for this device's public BLE address handles it locally.
+
+external_components:
+  - source: github://Bascht74/esphome-bthome-button
+    components: [bthome]
+
+esphome:
+  name: bthome-button
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
+esp32_ble:
+
+bthome:
+  burst_duration: 1500ms
+  # manufacturer_id and manufacturer_data are optional and must be set together.
+  # Nothing is filled in. The bytes are whatever the receiver's specification says.
+
+button:
+  - platform: template
+    name: "Kurz"
+    on_press:
+      - bthome.transmit:
+          event: press
+  - platform: template
+    name: "Doppelt"
+    on_press:
+      - bthome.transmit:
+          event: double_press
+  - platform: template
+    name: "Lang"
+    on_press:
+      - bthome.transmit:
+          event: long_press
+
+binary_sensor:
+  - platform: gpio
+    pin: GPIO4
+    name: "Wandtaster"
+    on_press:
+      - bthome.transmit:
+          event: press
+          index: 1

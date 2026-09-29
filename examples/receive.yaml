@@ -1,0 +1,42 @@
+# One binary sensor per gesture. Each pulses ON, then OFF.
+# Requires ESPHome 2026.8 or newer (ble_device_base).
+
+external_components:
+  - source: github://Bascht74/esphome-bthome-button
+    components: [bthome]
+
+esphome:
+  name: bthome-listener
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
+esp32_ble_tracker:
+
+bthome:
+
+binary_sensor:
+  - platform: bthome
+    mac_address: "3C:2E:F5:71:D5:2A"
+    type: button
+    index: 1
+    event: press
+    name: "Taste kurz"
+    on_press:
+      - logger.log: "kurz"
+
+  - platform: bthome
+    mac_address: "3C:2E:F5:71:D5:2A"
+    type: button
+    index: 1
+    event: double_press
+    name: "Taste doppelt"
+
+  - platform: bthome
+    mac_address: "3C:2E:F5:71:D5:2A"
+    type: button
+    index: 1
+    event: long_press
+    name: "Taste lang"
