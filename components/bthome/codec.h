@@ -5,6 +5,7 @@
 
 // BTHome v2 button codec. No ESPHome headers, so the host test can compile it.
 
+namespace esphome {
 namespace bthome {
 namespace codec {
 
@@ -35,3 +36,4 @@ bool parse(const uint8_t *data, size_t len, Parsed *out);
 
 }  // namespace codec
 }  // namespace bthome
+}  // namespace esphome

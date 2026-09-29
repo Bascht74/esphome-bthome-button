@@ -11,13 +11,13 @@ Zwei Richtungen, dieselbe Air-Schnittstelle:
 
 Das ist dasselbe Muster wie `remote_receiver` und `remote_transmitter`: ein Code, ein Binary Sensor; senden ist eine Action, die ein Template-Button oder ein GPIO aufruft.
 
-Benötigt ESPHome **2026.8** oder neuer und einen ESP32. Der Empfang hängt an `ble_device_base`, das Senden an `esp32_ble`.
+Benötigt ESPHome **2026.9** oder neuer und einen ESP32. Der Empfang hängt an `ble_device_base`, das Senden an `esp32_ble`. Gegen 2026.9.1 übersetzt.
 
 ## Pakete
 
 Der Baum ist absichtlich schmal. Jede Schicht ist eine eigene Datei und kann allein reviewt werden.
 
-1. **Codec** — `components/bthome/codec.*`, Host-Test `test/test_codec.cpp`. Device-Info, Packet-ID, Button-Objekt, Überspringen anderer fester Objekte (zum Beispiel Batterie davor). Verschlüsselte Pakete werden erkannt und verworfen.
+1. **Codec** — `components/bthome/codec.*`, Host-Test `tests/components/bthome/codec_test.cpp`. Device-Info, Packet-ID, Button-Objekt, Überspringen anderer fester Objekte (zum Beispiel Batterie davor). Verschlüsselte Pakete werden erkannt und verworfen.
 2. **Senden** — `bthome:` plus Action `bthome.transmit`. Burst, dann Funkstille. Packet-ID liegt im Flash und steigt pro Geste.
 3. **Empfangen** — `binary_sensor` Plattform. Pro `(mac, index, event)` ein Puls.
 4. **Manufacturer Data** — optionales Rohfeld, siehe unten.
@@ -104,9 +104,14 @@ bthome:
 
 ## Test
 
+Der Parser-Test liegt unter `tests/components/bthome/codec_test.cpp`, demselben Ort wie der ESPHome-Host-Test. Lokal, ohne den ESPHome-Baum:
+
 ```bash
-g++ -std=c++17 -Wall -Wextra -Werror -o test/test_codec test/test_codec.cpp components/bthome/codec.cpp
-./test/test_codec
+g++ -std=c++17 -Wall -Wextra -Werror -o /tmp/test_codec \
+  tests/components/bthome/codec_test.cpp components/bthome/codec.cpp
+/tmp/test_codec
 ```
 
-Der Firmware-Teil lässt sich hier nicht übersetzen. Den prüft ein normales ESPHome-Compile gegen 2026.8 oder neuer.
+Im ESPHome-Pull-Request ist dieselbe Abdeckung ein GoogleTest und läuft mit `script/cpp_unit_test.py bthome`.
+
+Der Firmware-Teil ist gegen ESPHome 2026.9.1 (ESP-IDF) übersetzt: Empfang und `bthome.transmit` bauen. Das Binary liegt nicht in diesem Repo.

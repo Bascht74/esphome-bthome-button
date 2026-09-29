@@ -95,6 +95,7 @@ async def to_code(config):
             cv.Optional(CONF_INDEX, default=1): cv.int_range(min=1, max=8),
         }
     ),
+    synchronous=True,
 )
 async def bthome_transmit_to_code(config, action_id, template_arg, args):
     var = cg.new_Pvariable(action_id, template_arg)

@@ -1,5 +1,6 @@
 #include "codec.h"
 
+namespace esphome {
 namespace bthome {
 namespace codec {
 
@@ -198,3 +199,4 @@ bool parse(const uint8_t *data, size_t len, Parsed *out) {
 
 }  // namespace codec
 }  // namespace bthome
+}  // namespace esphome
