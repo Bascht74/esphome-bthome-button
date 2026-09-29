@@ -20,7 +20,6 @@ bthome:
 binary_sensor:
   - platform: bthome
     mac_address: "3C:2E:F5:71:D5:2A"
-    type: button
     index: 1
     event: press
     name: "Taste kurz"
@@ -29,14 +28,12 @@ binary_sensor:
 
   - platform: bthome
     mac_address: "3C:2E:F5:71:D5:2A"
-    type: button
     index: 1
     event: double_press
     name: "Taste doppelt"
 
   - platform: bthome
     mac_address: "3C:2E:F5:71:D5:2A"
-    type: button
     index: 1
     event: long_press
     name: "Taste lang"

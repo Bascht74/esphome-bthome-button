@@ -1,14 +1,23 @@
 import esphome.codegen as cg
 from esphome.components import binary_sensor, ble_device_base
 import esphome.config_validation as cv
-from esphome.const import CONF_MAC_ADDRESS
-
-from . import BUTTON_EVENTS, CONF_EVENT, CONF_INDEX
+from esphome.const import CONF_EVENT, CONF_INDEX, CONF_MAC_ADDRESS
+from esphome.types import ConfigType
 
 AUTO_LOAD = ["ble_device_base"]
 
 CONF_PULSE_LENGTH = "pulse_length"
-CONF_TYPE = "type"
+
+# Names from the BTHome v2 button table.
+BUTTON_EVENTS = {
+    "press": 0x01,
+    "double_press": 0x02,
+    "triple_press": 0x03,
+    "long_press": 0x04,
+    "long_double_press": 0x05,
+    "long_triple_press": 0x06,
+    "hold_press": 0x80,
+}
 
 bthome_ns = cg.esphome_ns.namespace("bthome")
 BTHomeButtonBinarySensor = bthome_ns.class_(
@@ -24,7 +33,6 @@ CONFIG_SCHEMA = cv.All(
     .extend(
         {
             cv.Required(CONF_MAC_ADDRESS): cv.mac_address,
-            cv.Required(CONF_TYPE): cv.one_of("button", lower=True),
             cv.Required(CONF_EVENT): cv.enum(BUTTON_EVENTS, lower=True),
             cv.Optional(CONF_INDEX, default=1): cv.int_range(min=1, max=8),
             cv.Optional(CONF_PULSE_LENGTH, default="200ms"): cv.positive_time_period_milliseconds,
@@ -35,7 +43,8 @@ CONFIG_SCHEMA = cv.All(
 )
 
 
-async def to_code(config):
+async def to_code(config: ConfigType) -> None:
+    cg.add_define("USE_BTHOME_BINARY_SENSOR")
     var = await binary_sensor.new_binary_sensor(config)
     await cg.register_component(var, config)
     await ble_device_base.register_ble_device(var, config)

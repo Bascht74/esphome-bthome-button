@@ -5,15 +5,11 @@
 
 // BTHome v2 button codec. No ESPHome headers, so the host test can compile it.
 
-namespace esphome {
-namespace bthome {
-namespace codec {
+namespace esphome::bthome::codec {
 
 static constexpr uint8_t DEVICE_INFO_V2_TRIGGER = 0x44;
 static constexpr uint8_t OBJECT_PACKET_ID = 0x00;
 static constexpr uint8_t OBJECT_BUTTON = 0x3A;
-static constexpr uint8_t BUTTON_HOLD = 0x80;
-static constexpr uint8_t BUTTON_HOLD_ALIAS = 0xFE;
 static constexpr uint8_t MAX_BUTTONS = 8;
 
 struct Parsed {
@@ -34,6 +30,4 @@ bool encode_button(uint8_t packet_id, uint8_t event, uint8_t index, uint8_t *out
 // `data` starts at the device-info byte (UUID already removed by the BLE stack).
 bool parse(const uint8_t *data, size_t len, Parsed *out);
 
-}  // namespace codec
-}  // namespace bthome
-}  // namespace esphome
+}  // namespace esphome::bthome::codec

@@ -3,12 +3,16 @@ import re
 import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome import automation
+from esphome.config_helpers import filter_source_files_from_defines
 from esphome.const import CONF_ID
 from esphome.core import CORE
 
 CODEOWNERS = ["@Bascht74"]
 DEPENDENCIES = ["esp32"]
 AUTO_LOAD = ["esp32_ble"]
+
+# The receiver is compiled only when a binary_sensor platform is configured.
+FILTER_SOURCE_FILES = filter_source_files_from_defines({"binary_sensor.cpp": "USE_BTHOME_BINARY_SENSOR"})
 
 CONF_BURST_DURATION = "burst_duration"
 CONF_MANUFACTURER_ID = "manufacturer_id"
@@ -27,7 +31,7 @@ BUTTON_EVENTS = {
     "long_press": 0x04,
     "long_double_press": 0x05,
     "long_triple_press": 0x06,
-    "hold": 0x80,
+    "hold_press": 0x80,
 }
 
 

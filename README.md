@@ -34,7 +34,6 @@ bthome:
 binary_sensor:
   - platform: bthome
     mac_address: "3C:2E:F5:71:D5:2A"
-    type: button
     index: 1
     event: press
     name: "Taste kurz"
@@ -54,9 +53,9 @@ binary_sensor:
 | `long_press` | `0x04` |
 | `long_double_press` | `0x05` |
 | `long_triple_press` | `0x06` |
-| `hold` | `0x80` |
+| `hold_press` | `0x80` |
 
-`0x00` löst nichts aus. `0xFE` wird nur beim Empfang von `hold` wie `0x80` gewertet. Dieselbe Packet-ID im Burst zählt einmal. Ohne Packet-ID gilt eine Pause von 1,2 s. `pulse_length` (Default 200 ms) ist die Zeit, die der Binary Sensor ON bleibt. `on_press` läuft auf dem ESP.
+`0x00` löst nichts aus. `0xFE` wird beim Empfang wie `hold_press` gewertet. Dieselbe Packet-ID im Burst zählt einmal. Ohne Packet-ID gilt eine Pause von 1,2 s, das erste Paket zählt trotzdem. `pulse_length` (Default 200 ms) ist die Zeit, die der Binary Sensor ON bleibt. `on_press` läuft auf dem ESP.
 
 Verschlüsselte Advertisements werden ignoriert. Dafür gibt es noch keinen Schlüssel.
 
