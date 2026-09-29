@@ -113,11 +113,16 @@ int object_payload_len(uint8_t id, const uint8_t *p, size_t avail) {
     return (avail < static_cast<size_t>(n)) ? -1 : n;
   }
   if (id == 0x53 || id == 0x54) {
+    // Length byte is part of the object. A declared length of 0 is still one byte,
+    // otherwise a following button would be dropped with the rest of the packet.
     if (avail < 1) {
       return -1;
     }
     const int n = 1 + p[0];
-    return (avail < static_cast<size_t>(n)) ? -1 : n;
+    if (avail < static_cast<size_t>(n)) {
+      return -1;
+    }
+    return n;
   }
   const int n = fixed_object_len(id);
   if (n < 0 || avail < static_cast<size_t>(n)) {
@@ -175,7 +180,7 @@ bool parse(const uint8_t *data, size_t len, Parsed *out) {
     const uint8_t id = data[offset++];
     const int plen = object_payload_len(id, data + offset, len - offset);
     if (plen < 0) {
-      return false;
+      break;
     }
     if (id == OBJECT_PACKET_ID) {
       out->has_packet_id = true;
